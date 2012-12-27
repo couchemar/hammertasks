@@ -1,12 +1,10 @@
 {{set . "title" "Home"}}
 {{template "header.html" .}}
 
-<h1>Your Application Is Ready</h1>
-<form method="POST" id="" action="/auth/login">
+<form method="POST" id="" action="/login">
   <input name="login">
   <input name="password">
   <button type="submit">Login</button>
 </form>
 
 {{template "footer.html" .}}
-
