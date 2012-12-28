@@ -11,7 +11,28 @@ type Application struct {
 	*rev.Controller
 }
 
+func (c Application) AddUser() rev.Result {
+	if user, _ := c.connected(); user != nil {
+		c.RenderArgs["user"] = user
+	}
+	return nil
+}
+
+func (c Application) connected() (*models.User, error) {
+	if c.RenderArgs["user"] != nil {
+		return c.RenderArgs["user"].(*models.User), nil
+	}
+	if login, ok := c.Session["login"]; ok {
+		return c.getUser(login)
+	}
+	return nil, nil
+}
+
 func (c Application) Index() rev.Result {
+	if user, _ := c.connected(); user != nil {
+		return c.Redirect(Tasks.Index)
+	}
+	c.Flash.Error("Please log in first")
 	return c.Render()
 }
 
@@ -58,4 +79,11 @@ func (c Application) Login(login, password string) rev.Result {
 	c.Session["login"] = login
 	c.Flash.Success("Welcome, " + login)
 	return c.Redirect(Tasks.Index)
+}
+
+func (c Application) Logout() rev.Result {
+	for k := range c.Session {
+		delete(c.Session, k)
+	}
+	return c.Redirect(Application.Index)
 }
