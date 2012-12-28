@@ -22,11 +22,11 @@
         <ul class="nav pull-right">
           {{if .user}}
           <li class="active"><a href="#">{{ .user.Login }}</a></li>
+          <li class="divider-vertical"></li>
+          <li><a href="/logout">Выйти</a></li>
           {{else}}
           <li><a href="#">Войти</a></li>
           {{end}}
-          <li class="divider-vertical"></li>
-          <li class="active"><a href="/logout">Выйти</a></li>
         </ul>
       </div>
     </div>
