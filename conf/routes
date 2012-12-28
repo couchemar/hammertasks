@@ -4,6 +4,7 @@
 
 GET     /                                       Application.Index
 POST    /login                                  Application.Login
+GET     /tasks                                  Tasks.Index
 
 
 # Ignore favicon requests
