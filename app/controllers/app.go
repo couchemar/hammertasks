@@ -4,7 +4,7 @@ import (
 	"errors"
 	"github.com/davemeehan/Neo4j-GO"
 	"github.com/robfig/revel"
-	"src/hammertasks/app/models"
+	"hammertasks/app/models"
 )
 
 type Application struct {
