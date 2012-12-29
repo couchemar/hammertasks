@@ -3,4 +3,33 @@
 
 <h1>Тут будут таски</h1>
 
+<div id="tasks_list">
+  <div>task1</div>
+  <div>task2</div>
+</div>
+
+<div>
+  <form class="form-horizontal" method="POST" action="/tasks">
+    <fieldset>
+      <legend>Новая задача</legend>
+      <div class="control-group">
+        <label class="control-label" for="summary">Summary</label>
+        <div class="controls">
+          <input class="input-block-level" type="text" id="summary" name="summary"/>
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label" for="description">Description</label>
+        <div class="controls">
+          <textarea class="input-block-level" id="description" name="summary" rows="3"></textarea>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Создать</button>
+        <button type="button" class="btn">Отмена</button>
+      </div>
+    </fieldset>
+  </form>
+</div>
+
 {{template "footer.html" .}}
