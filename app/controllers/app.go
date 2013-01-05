@@ -50,17 +50,17 @@ func (c Application) getUser(login string) (*models.User, error) {
 		rev.WARN.Println("Error when search: ", err)
 		return nil, err
 	}
-	user_data := users[0]
+	userData := users[0]
 
-	if user_data == nil {
+	if userData == nil || userData.Data == nil {
 		rev.INFO.Println("Not found")
 		return nil, errors.New("Not found")
 	}
 
 	user := models.User{
-		Id:       user_data.ID,
-		Login:    user_data.Data["login"].(string),
-		Password: user_data.Data["password"].(string),
+		Id:       userData.ID,
+		Login:    userData.Data["login"].(string),
+		Password: userData.Data["password"].(string),
 	}
 
 	return &user, nil
