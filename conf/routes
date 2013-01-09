@@ -6,6 +6,7 @@ GET     /                                       Application.Index
 POST    /login                                  Application.Login
 GET     /logout                                 Application.Logout
 GET     /tasks                                  Tasks.Index
+POST    /tasks                                  Tasks.CreateTask
 
 
 # Ignore favicon requests
