@@ -56,3 +56,19 @@ func (c Tasks) CreateTask(summary, description string) rev.Result {
 	}
 	return c.Redirect(Tasks.Index)
 }
+
+type Task struct {
+	Id int
+	Summary string
+	Description string
+}
+
+type TaskList []Task
+
+func (c Tasks) List() rev.Result {
+	// Пока тут будет заглушка.
+	return c.RenderJson(TaskList{
+		Task{1, "Test", "Wow"},
+		Task{2, "Test1", "Wowzaaa"},
+    })
+}

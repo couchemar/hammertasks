@@ -5,8 +5,11 @@
 <h1>Тут будут таски</h1>
 
 <div id="tasks_list">
-  <div>task1</div>
-  <div>task2</div>
+  <ul data-bind="foreach: tasks">
+    <li>
+      <button class="btn btn-link" data-bind="text: summary"></button>
+    </li>
+  <ul>
 </div>
 
 <button id="addTask" class="btn btn-primary" type="button" data-toggle="modal" data-target="#addTaskModal" data-backdrop="false">Добавить задачу</button>

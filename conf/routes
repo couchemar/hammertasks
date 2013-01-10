@@ -5,7 +5,9 @@
 GET     /                                       Application.Index
 POST    /login                                  Application.Login
 GET     /logout                                 Application.Logout
+# Переименовать /tasks в /manager /tasks/list в /tasks
 GET     /tasks                                  Tasks.Index
+GET     /tasks/list                             Tasks.List
 POST    /tasks                                  Tasks.CreateTask
 
 
