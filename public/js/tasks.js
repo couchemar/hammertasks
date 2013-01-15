@@ -1,22 +1,10 @@
-function Task(data) {
-    this.id = data.Id;
-    this.summary = ko.observable(data.Summary);
-    this.description = ko.observable(data.Description);
-}
-
-function TaskListViewModel() {
-    var self = this;
-    self.tasks = ko.observableArray([]);
-
-    // init.
-    $.getJSON("/tasks/list", function(allData) {
-        var tasks = $.map(allData, function(item) {
-            return new Task(item);
-        });
-        self.tasks(tasks);
-    });
-}
-
-$(function() {
-    ko.applyBindings(new TaskListViewModel());
+angular.module('tasks', []).config(function($interpolateProvider) {
+  $interpolateProvider.startSymbol('{[');
+  $interpolateProvider.endSymbol(']}');
 });
+
+function TaskCtrl($scope, $http) {
+    $http.get('/tasks/list').success(function(data) {
+        $scope.tasks = data
+    })
+}

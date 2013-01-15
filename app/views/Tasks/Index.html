@@ -4,10 +4,10 @@
 
 <h1>Задачи</h1>
 
-<div id="tasks_list">
-  <ul data-bind="foreach: tasks">
-    <li>
-      <button class="btn btn-link" data-bind="text: summary"></button>
+<div id="tasks_list" ng-controller="TaskCtrl">
+  <ul>
+    <li ng-repeat="task in tasks">
+      <button class="btn btn-link">{[task.summary]}</button>
       <button class="btn btn-danger">Удалить</button>
     </li>
   <ul>
