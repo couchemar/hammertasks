@@ -1,5 +1,5 @@
 function Task(data) {
-    this.id = data.Id
+    this.id = data.Id;
     this.summary = ko.observable(data.Summary);
     this.description = ko.observable(data.Description);
 }
@@ -14,7 +14,7 @@ function TaskListViewModel() {
             return new Task(item);
         });
         self.tasks(tasks);
-    })
+    });
 }
 
 $(function() {
