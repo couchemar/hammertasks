@@ -1,8 +1,10 @@
 package controllers
 
 import (
+	"encoding/json"
 	"github.com/jmcvetta/neo4j"
 	"github.com/robfig/revel"
+	"hammertasks/app/models"
 	"hammertasks/db"
 )
 
@@ -14,7 +16,20 @@ func (c Tasks) Index() rev.Result {
 	return c.Render()
 }
 
-func (c Tasks) CreateTask(summary, description string) rev.Result {
+func (c Tasks) CreateTask() rev.Result {
+
+	requestDecoder := json.NewDecoder(c.Request.Body)
+	var task models.Task
+	err := requestDecoder.Decode(&task)
+
+	if err != nil {
+		rev.ERROR.Printf("Decode error: %s", err)
+		panic(err)
+	}
+
+	summary := task.Summary
+	description := task.Description
+
 	neo := db.Connect("http://localhost:7474/db/data")
 	nodes := neo.Connection.Nodes
 	rootNode := neo.GetRootNode()
@@ -50,11 +65,20 @@ func (c Tasks) CreateTask(summary, description string) rev.Result {
 			panic(err)
 		}
 	}
-	return c.Redirect(Tasks.Index)
+	task.Id = taskNode.Id()
+	return c.RenderJson(task)
+}
+
+func (c Tasks) DetailPage() rev.Result {
+	return c.Render()
 }
 
 func (c Tasks) List() rev.Result {
 	neo := db.Connect("http://localhost:7474/db/data")
 	tasks := neo.GetTasksList()
 	return c.RenderJson(tasks)
+}
+
+func (c Tasks) ListPage() rev.Result {
+	return c.Render()
 }

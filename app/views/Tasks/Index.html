@@ -1,47 +1,8 @@
 {{set . "title" "Задачи"}}
 {{append . "moreScripts" "js/tasks.js"}}
+{{append . "moreScripts" "js/res.js"}}
 {{template "header.html" .}}
 
-<h1>Задачи</h1>
-
-<div id="tasks_list" ng-controller="TaskCtrl">
-  <ul>
-    <li ng-repeat="task in tasks">
-      <button class="btn btn-link">{[task.summary]}</button>
-      <button class="btn btn-danger">Удалить</button>
-    </li>
-  <ul>
-</div>
-
-<button id="addTask" class="btn btn-primary" type="button" data-toggle="modal" data-target="#addTaskModal" data-backdrop="false">Добавить задачу</button>
-
-<div id="addTaskModal" class="modal hide fade" role="dialog">
-  <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-    <h3>Новая задача</h3>
-  </div>
-  <div class="modal-body">
-    <form class="form-horizontal" method="POST" action="/tasks">
-      <fieldset>
-        <div class="control-group">
-          <label class="control-label" for="summary">Summary</label>
-          <div class="controls">
-            <input class="input-block-level" type="text" id="summary" name="summary"/>
-          </div>
-        </div>
-        <div class="control-group">
-          <label class="control-label" for="description">Description</label>
-          <div class="controls">
-            <textarea class="input-block-level" id="description" name="description" rows="3"></textarea>
-          </div>
-        </div>
-      </fieldset>
-    </form>
-  </div>
-  <div class="modal-footer">
-    <button type="submit" class="btn btn-primary">Создать</button>
-    <button type="button" class="btn">Отмена</button>
-  </div>
-</div>
+<div ng-view></div>
 
 {{template "footer.html" .}}

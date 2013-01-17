@@ -1,0 +1,11 @@
+<h1>Задачи</h1>
+
+<a class="btn btn-primary" href="#/new">Добавить задачу</a>
+<div id="tasks_list" ng-controller="ListCtrl">
+  <ul>
+    <li ng-repeat="task in tasks">
+      <button class="btn btn-link">{[task.summary]}</button>
+      <button class="btn btn-danger">Удалить</button>
+    </li>
+  <ul>
+</div>

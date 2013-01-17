@@ -6,9 +6,14 @@ GET     /                                       Application.Index
 POST    /login                                  Application.Login
 GET     /logout                                 Application.Logout
 # Переименовать /tasks в /manager /tasks/list в /tasks
+
 GET     /tasks                                  Tasks.Index
-GET     /tasks/list                             Tasks.List
-POST    /tasks                                  Tasks.CreateTask
+GET     /tasks/list                             Tasks.ListPage
+GET     /tasks/detail                           Tasks.DetailPage
+
+GET     /tasks/json                             Tasks.List
+POST    /tasks/json                             Tasks.CreateTask
+
 
 
 # Ignore favicon requests
