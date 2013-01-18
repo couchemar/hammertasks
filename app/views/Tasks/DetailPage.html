@@ -1,4 +1,4 @@
-<form name="taskForm" class="form-horizontal">
+<form name="taskForm" class="form-horizontal" ng-submit="save()">
   <fieldset>
     <legend>Новая задача</legend>
     <div class="control-group">
@@ -14,7 +14,7 @@
       </div>
     </div>
     <div class="form-actions">
-      <button type="button" class="btn btn-primary" ng-click="save()">Сохранить</button>
+      <button type="submit" class="btn btn-primary">Сохранить</button>
       <a  href="#/" class="btn">Отмена</a>
     </div>
   </fieldset>

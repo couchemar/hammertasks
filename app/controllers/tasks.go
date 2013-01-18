@@ -73,6 +73,15 @@ func (c Tasks) DetailPage() rev.Result {
 	return c.Render()
 }
 
+func (c Tasks) GetTask(id int) rev.Result {
+	neo := db.Connect("http://localhost:7474/db/data")
+	task, err := neo.GetTask(id)
+	if err != nil {
+		panic(err)
+	}
+	return c.RenderJson(task)
+}
+
 func (c Tasks) List() rev.Result {
 	neo := db.Connect("http://localhost:7474/db/data")
 	tasks := neo.GetTasksList()

@@ -1,6 +1,8 @@
 package db
 
 import (
+	"errors"
+	"fmt"
 	"github.com/jmcvetta/neo4j"
 	"github.com/jmcvetta/restclient"
 	"hammertasks/app/models"
@@ -52,6 +54,28 @@ type cypherResponse struct {
 	Data    [][]nodeResponse `json:"data"`
 }
 
+func (db *DataBase) GetTask(id int) (*models.Task, error) {
+	nodes := db.Connection.Nodes
+	taskNode, err := nodes.Get(id)
+	if err != nil {
+		return nil, errors.New(fmt.Sprintf("Could not get id: %s (%s)", id, err))
+	}
+	sum, err := taskNode.GetProperty("summary")
+	if err != nil {
+		return nil, errors.New(fmt.Sprintf("Could not get 'summary' for id: %s (%s)", id, err))
+	}
+	desc, err := taskNode.GetProperty("description")
+	if err != nil {
+		return nil, errors.New(fmt.Sprintf("Could not get 'description' for id: %s (%s)", id, err))
+	}
+	task := models.Task{
+		Id:          taskNode.Id(),
+		Summary:     sum,
+		Description: desc,
+	}
+	return &task, nil
+}
+
 func (db *DataBase) GetTasksList() *models.TaskList {
 
 	var result cypherResponse
@@ -77,11 +101,9 @@ func (db *DataBase) GetTasksList() *models.TaskList {
 		panic(err)
 	}
 
-	tasks := make(models.TaskList, 1)
+	tasks := make(models.TaskList, 0)
 
 	responseData := result.Data
-
-	nodes := db.Connection.Nodes
 
 	for _, row := range responseData {
 		nodeInfo := row[0]
@@ -91,24 +113,12 @@ func (db *DataBase) GetTasksList() *models.TaskList {
 		if err != nil {
 			panic(err)
 		}
-		taskNode, err := nodes.Get(id)
+
+		task, err := db.GetTask(id)
 		if err != nil {
 			panic(err)
 		}
-		sum, err := taskNode.GetProperty("summary")
-		if err != nil {
-			panic(err)
-		}
-		desc, err := taskNode.GetProperty("description")
-		if err != nil {
-			panic(err)
-		}
-		task := models.Task{
-			Id:          taskNode.Id(),
-			Summary:     sum,
-			Description: desc,
-		}
-		tasks = append(tasks, task)
+		tasks = append(tasks, *task)
 	}
 
 	return &tasks
