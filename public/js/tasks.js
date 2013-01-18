@@ -34,7 +34,7 @@ function EditTaskCtrl($scope, $location, $routeParams, Task) {
             $scope.task = new Task(task);
         },
         function(err) {
-            alert('Fail =(');
+            $location.path('/');
         }
     );
 

@@ -11,6 +11,8 @@ import (
 	"strings"
 )
 
+var NotFound = errors.New("Not Found")
+
 type DataBase struct {
 	url        *url.URL
 	Connection *neo4j.Database
@@ -58,15 +60,19 @@ func (db *DataBase) GetTask(id int) (*models.Task, error) {
 	nodes := db.Connection.Nodes
 	taskNode, err := nodes.Get(id)
 	if err != nil {
-		return nil, errors.New(fmt.Sprintf("Could not get id: %s (%s)", id, err))
+		return nil, NotFound
+	}
+	nodeType, err := taskNode.GetProperty("type")
+	if err != nil || nodeType != "task" {
+		return nil, NotFound
 	}
 	sum, err := taskNode.GetProperty("summary")
 	if err != nil {
-		return nil, errors.New(fmt.Sprintf("Could not get 'summary' for id: %s (%s)", id, err))
+		return nil, errors.New(fmt.Sprintf("Could not get '%s' for id: %s (%s)", "summary", id, err))
 	}
 	desc, err := taskNode.GetProperty("description")
 	if err != nil {
-		return nil, errors.New(fmt.Sprintf("Could not get 'description' for id: %s (%s)", id, err))
+		return nil, errors.New(fmt.Sprintf("Could not get '%s' for id: %s (%s)", "description", id, err))
 	}
 	task := models.Task{
 		Id:          taskNode.Id(),
@@ -82,7 +88,7 @@ func (db *DataBase) GetTasksList() *models.TaskList {
 	var nerr interface{}
 
 	query := cypherRequest{
-		Query:  "START r=node(0) MATCH r-[:TASKS]->t<-[:IS_TASK]-tasks RETURN tasks",
+		Query:  "START r=node(0) MATCH r-[:TASKS]->t<-[:IS_TASK]-task RETURN task",
 		Params: queryParams{},
 	}
 

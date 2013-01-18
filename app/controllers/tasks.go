@@ -6,6 +6,7 @@ import (
 	"github.com/robfig/revel"
 	"hammertasks/app/models"
 	"hammertasks/db"
+	"net/http"
 )
 
 type Tasks struct {
@@ -73,11 +74,24 @@ func (c Tasks) DetailPage() rev.Result {
 	return c.Render()
 }
 
+type errorJSON struct {
+	Code    int    `json:"code"`
+	Message string `json:"message"`
+}
+
 func (c Tasks) GetTask(id int) rev.Result {
 	neo := db.Connect("http://localhost:7474/db/data")
 	task, err := neo.GetTask(id)
 	if err != nil {
-		panic(err)
+		if err == db.NotFound {
+			c.Response.Status = http.StatusNotFound
+			return c.RenderJson(errorJSON{
+				Code:    404,
+				Message: "Not found",
+			})
+		} else {
+			panic(err)
+		}
 	}
 	return c.RenderJson(task)
 }
