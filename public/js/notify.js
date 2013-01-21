@@ -10,7 +10,7 @@ angular.module('services.notifications', ['ngResource'])
             },
             remove: function(notification) {
                 var idx = notifications.indexOf(notification);
-                if (idx>-1) {
+                if (idx > -1) {
                     notifications.splice(idx, 1);
                 }
             }

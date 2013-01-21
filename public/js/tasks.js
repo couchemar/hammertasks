@@ -1,4 +1,4 @@
-angular.module('tasks', ['hammerServices', 'services.notifications'])
+angular.module('tasks', ['resources.tasks', 'services.notifications'])
     .config(function($routeProvider) {
         $routeProvider
             .when('/', {controller:ListCtrl,
@@ -35,5 +35,13 @@ function EditTaskCtrl($scope, $location, $routeParams,
             $location.path('/');
         }
     );
-
+    $scope.save = function() {
+        $scope.task.update(
+            function() {
+                $location.path('/');
+            },
+            function(err) {
+                notifications.send(!!err.data['message']?err.data:{message:'Could not save'});
+            });
+    };
 }
