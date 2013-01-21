@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html ng-app="tasks">
+<html ng-app="app">
   <head>
     <title>{{.title}}</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -14,11 +14,13 @@
     {{range .moreStyles}}
       <link rel="stylesheet" type="text/css" href="/public/{{.}}">
     {{end}}
+    <script src="/public/js/app.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/public/js/notify.js" type="text/javascript" charset="utf-8"></script>
     {{range .moreScripts}}
       <script src="/public/{{.}}" type="text/javascript" charset="utf-8"></script>
     {{end}}
   </head>
-  <body>
+  <body ng-controller="AppCtrl">
 
     <div class="navbar navbar-inverse">
       <div class="navbar-inner">
@@ -33,7 +35,7 @@
       </div>
     </div>
 
-    <div id="global-notification">
+    <div ng-include="'public/templates/notifications.tpl.html'" class="container-fluid" ng-show="notifications.get().length">
       {{if .flash.error}}
         <p>{{.flash.error}}</p>
       {{end}}

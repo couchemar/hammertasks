@@ -1,8 +1,4 @@
-angular.module('tasks', ['hammerServices'])
-    .config(function($interpolateProvider) {
-        $interpolateProvider.startSymbol('{[');
-        $interpolateProvider.endSymbol(']}');
-    })
+angular.module('tasks', ['hammerServices', 'services.notifications'])
     .config(function($routeProvider) {
         $routeProvider
             .when('/', {controller:ListCtrl,
@@ -27,13 +23,15 @@ function CreateTaskCtrl($scope, $location, Task) {
     };
 }
 
-function EditTaskCtrl($scope, $location, $routeParams, Task) {
+function EditTaskCtrl($scope, $location, $routeParams,
+                      Task, notifications) {
     Task.get(
         {id: $routeParams.taskId},
         function(task) {
             $scope.task = new Task(task);
         },
         function(err) {
+            notifications.send(err.data);
             $location.path('/');
         }
     );
