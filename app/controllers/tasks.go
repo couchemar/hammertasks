@@ -17,11 +17,19 @@ func (c Tasks) Index() rev.Result {
 	return c.Render()
 }
 
-func (c Tasks) CreateTask() rev.Result {
-
+func (c Tasks) decodeTask() (*models.Task, error) {
 	requestDecoder := json.NewDecoder(c.Request.Body)
 	var task models.Task
 	err := requestDecoder.Decode(&task)
+
+	if err != nil {
+		return nil, err
+	}
+	return &task, nil
+}
+
+func (c Tasks) CreateTask() rev.Result {
+	task, err := c.decodeTask()
 
 	if err != nil {
 		rev.ERROR.Printf("Decode error: %s", err)
@@ -67,6 +75,42 @@ func (c Tasks) CreateTask() rev.Result {
 		}
 	}
 	task.Id = taskNode.Id()
+	return c.RenderJson(task)
+}
+
+func (c Tasks) UpdateTask(id int) rev.Result {
+
+	var err error
+	task, err := c.decodeTask()
+
+	if err != nil {
+		rev.ERROR.Printf("Decode error: %s", err)
+		panic(err)
+	}
+
+	summary := task.Summary
+	description := task.Description
+
+	neo := db.Connect("http://localhost:7474/db/data")
+	nodes := neo.Connection.Nodes
+
+	taskNode, err := nodes.Get(id)
+	if err != nil {
+		rev.ERROR.Printf("Could not get task: %s", err)
+		panic(err)
+	}
+
+	err = taskNode.SetProperty("summary", summary)
+	if err != nil {
+		rev.ERROR.Printf("Could not set propery 'summary' : %s", err)
+		panic(err)
+	}
+	err = taskNode.SetProperty("description", description)
+	if err != nil {
+		rev.ERROR.Printf("Could not set propery 'description' : %s", err)
+		panic(err)
+	}
+
 	return c.RenderJson(task)
 }
 

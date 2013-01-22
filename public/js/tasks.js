@@ -38,6 +38,7 @@ function EditTaskCtrl($scope, $location, $routeParams,
     $scope.save = function() {
         $scope.task.update(
             function() {
+                notifications.send({message: 'Successfully saved'});
                 $location.path('/');
             },
             function(err) {

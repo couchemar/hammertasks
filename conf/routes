@@ -14,6 +14,7 @@ GET     /tasks/detail                           Tasks.DetailPage
 GET     /tasks/json                             Tasks.List
 POST    /tasks/json                             Tasks.CreateTask
 GET     /tasks/json/{id}                        Tasks.GetTask
+PUT     /tasks/json/{id}                        Tasks.UpdateTask
 
 
 
