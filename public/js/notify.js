@@ -5,6 +5,14 @@ angular.module('services.notifications', ['ngResource'])
             send: function(notification) {
                 notifications.push(notification);
             },
+            sendSuccess: function(message) {
+                notifications.push({'message': message,
+                                    'type': 'success'});
+            },
+            sendError: function(message) {
+                notifications.push({'message': message,
+                                    'type': 'error'});
+            },
             get: function() {
                 return notifications;
             },

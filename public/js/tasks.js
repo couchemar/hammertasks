@@ -15,11 +15,19 @@ function ListCtrl($scope, Task) {
     $scope.orderProp = 'id';
 }
 
-function CreateTaskCtrl($scope, $location, Task) {
+function CreateTaskCtrl($scope, $location, Task, notifications) {
     $scope.save = function() {
-        Task.save({}, $scope.task, function(task) {
-            $location.path('/');
-        });
+        Task.save({},
+                  $scope.task,
+                  function(task) {
+                      notifications.sendSuccess('Successfully created');
+                      $location.path('/');
+                  },
+                  function(err) {
+                      notifications.sendError('Could not create');
+                      $location.path('/');
+                  }
+                 );
     };
 }
 
@@ -31,18 +39,29 @@ function EditTaskCtrl($scope, $location, $routeParams,
             $scope.task = new Task(task);
         },
         function(err) {
-            notifications.send(err.data);
+            notifications.sendError(err.data['message']);
             $location.path('/');
         }
     );
     $scope.save = function() {
         $scope.task.update(
             function() {
-                notifications.send({message: 'Successfully saved'});
+                notifications.sendSuccess('Successfully saved');
                 $location.path('/');
             },
             function(err) {
-                notifications.send(!!err.data['message']?err.data:{message:'Could not save'});
+                notifications.sendError(!!err.data['message']?err.data['message']:'Could not save');
             });
+    };
+    $scope.remove = function() {
+        $scope.task.remove(
+            function() {
+                notifications.sendSuccess('Successfully deleted');
+                $location.path('/');
+            },
+            function(err) {
+                notifications.sendError(!!err.data['message']?err.data['message']:'Could not delete');
+            }
+        );
     };
 }

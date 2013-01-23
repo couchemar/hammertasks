@@ -56,6 +56,7 @@ func (c Tasks) CreateTask() rev.Result {
 	taskProps := neo4j.Properties{
 		"summary":     summary,
 		"description": description,
+		"type":        "task",
 	}
 	taskNode, err := nodes.Create(taskProps)
 	if err != nil {
@@ -148,4 +149,35 @@ func (c Tasks) List() rev.Result {
 
 func (c Tasks) ListPage() rev.Result {
 	return c.Render()
+}
+
+func (c Tasks) DeleteTask(id int) rev.Result {
+	neo := db.Connect("http://localhost:7474/db/data")
+	nodes := neo.Connection.Nodes
+
+	taskNode, err := nodes.Get(id)
+	if err != nil {
+		rev.ERROR.Printf("Could not get task: %s", err)
+		panic(err)
+	}
+
+	rels, err := taskNode.Relationships()
+	if err != nil {
+		rev.ERROR.Printf("Could not get task relationships: %s", err)
+		panic(err)
+	}
+	for _, rel := range rels {
+		err = rel.Delete()
+		if err != nil {
+			rev.ERROR.Printf("Could not delete task relation: %s", err)
+			panic(err)
+		}
+	}
+
+	err = taskNode.Delete()
+	if err != nil {
+		rev.ERROR.Printf("Could not delete task: %s", err)
+		panic(err)
+	}
+	return c.RenderText("ok")
 }

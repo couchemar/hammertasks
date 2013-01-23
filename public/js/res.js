@@ -12,6 +12,13 @@ angular.module('resources.tasks', ['ngResource'])
                 angular.extend({}, this),
                 success,
                 fail);
+        };
+        Task.prototype.remove = function(success, fail) {
+            return Task.remove(
+                {id: this.id},
+                success,
+                fail
+            )
         }
         return Task;
     });

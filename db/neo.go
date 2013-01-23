@@ -122,7 +122,7 @@ func (db *DataBase) GetTasksList() *models.TaskList {
 
 		task, err := db.GetTask(id)
 		if err != nil {
-			panic(err)
+			panic(errors.New(fmt.Sprintf("Could not get task (id: %s) (%s)", id, err)))
 		}
 		tasks = append(tasks, *task)
 	}

@@ -15,6 +15,7 @@ GET     /tasks/json                             Tasks.List
 POST    /tasks/json                             Tasks.CreateTask
 GET     /tasks/json/{id}                        Tasks.GetTask
 PUT     /tasks/json/{id}                        Tasks.UpdateTask
+DELETE  /tasks/json/{id}                        Tasks.DeleteTask
 
 
 
