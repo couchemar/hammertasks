@@ -119,12 +119,16 @@ func (c Tasks) EditPage() rev.Result {
 	return c.Render()
 }
 
+func (c Tasks) InfoPage() rev.Result {
+	return c.Render()
+}
+
 type errorJSON struct {
 	Code    int    `json:"code"`
 	Message string `json:"message"`
 }
 
-func (c Tasks) GetTask(id int) rev.Result {
+func (c Tasks) GetTask(id int, dependencies bool) rev.Result {
 	neo := db.Connect("http://localhost:7474/db/data")
 	task, err := neo.GetTask(id)
 	if err != nil {

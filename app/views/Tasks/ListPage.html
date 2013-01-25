@@ -3,7 +3,7 @@
 <div id="tasks_list" ng-controller="ListCtrl">
   <ul>
     <li ng-repeat="task in tasks | orderBy:orderProp">
-      <a class="btn btn-link" href="#/edit/{[task.id]}">{[task.summary]}</a>
+      <a class="btn btn-link" href="#/info/{[task.id]}">{[task.summary]}</a>
     </li>
   <ul>
 </div>

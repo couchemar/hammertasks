@@ -10,6 +10,7 @@ GET     /logout                                 Application.Logout
 GET     /tasks                                  Tasks.Index
 GET     /tasks/list                             Tasks.ListPage
 GET     /tasks/edit                             Tasks.EditPage
+GET     /tasks/info                             Tasks.InfoPage
 
 GET     /tasks/json                             Tasks.List
 POST    /tasks/json                             Tasks.CreateTask

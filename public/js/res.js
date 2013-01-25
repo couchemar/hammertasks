@@ -18,7 +18,7 @@ angular.module('resources.tasks', ['ngResource'])
                 {id: this.id},
                 success,
                 fail
-            )
-        }
+            );
+        };
         return Task;
     });

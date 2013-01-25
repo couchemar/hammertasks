@@ -7,6 +7,8 @@ angular.module('tasks', ['resources.tasks', 'services.notifications'])
                            templateUrl: 'tasks/edit'})
             .when('/edit/:taskId', {controller: EditTaskCtrl,
                                     templateUrl: 'tasks/edit'})
+            .when('/info/:taskId', {controller: InfoTaskCtrl,
+                                     templateUrl: 'tasks/info'})
             .otherwise({redirectTo:'/'});
     });
 
@@ -64,4 +66,22 @@ function EditTaskCtrl($scope, $location, $routeParams,
             }
         );
     };
+}
+
+
+function InfoTaskCtrl($scope, $location, $routeParams,
+                      Task, notifications) {
+    Task.get(
+        {
+            id: $routeParams.taskId,
+            dependencies: true
+        },
+        function(task) {
+            $scope.task = new Task(task);
+        },
+        function(err) {
+            notifications.sendError(err.data['message']);
+            $location.path('/');
+        }
+    );
 }
