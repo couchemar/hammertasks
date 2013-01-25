@@ -1,12 +1,12 @@
 angular.module('tasks', ['resources.tasks', 'services.notifications'])
     .config(function($routeProvider) {
         $routeProvider
-            .when('/', {controller:ListCtrl,
-                        templateUrl:'tasks/list'})
-            .when('/new', {controller:CreateTaskCtrl,
-                           templateUrl:'tasks/detail'})
-            .when('/edit/:taskId', {controller:EditTaskCtrl,
-                                    templateUrl:'tasks/detail'})
+            .when('/', {controller: ListCtrl,
+                        templateUrl: 'tasks/list'})
+            .when('/new', {controller: CreateTaskCtrl,
+                           templateUrl: 'tasks/edit'})
+            .when('/edit/:taskId', {controller: EditTaskCtrl,
+                                    templateUrl: 'tasks/edit'})
             .otherwise({redirectTo:'/'});
     });
 

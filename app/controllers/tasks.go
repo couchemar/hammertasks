@@ -115,7 +115,7 @@ func (c Tasks) UpdateTask(id int) rev.Result {
 	return c.RenderJson(task)
 }
 
-func (c Tasks) DetailPage() rev.Result {
+func (c Tasks) EditPage() rev.Result {
 	return c.Render()
 }
 
