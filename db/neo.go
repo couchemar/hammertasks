@@ -56,23 +56,58 @@ type cypherResponse struct {
 	Data    [][]nodeResponse `json:"data"`
 }
 
-func (db *DataBase) GetTask(id int) (*models.Task, error) {
-	nodes := db.Connection.Nodes
-	taskNode, err := nodes.Get(id)
+type myNode struct {
+	neo4j.Node
+}
+
+func (taskNode *myNode) getInDeps() (*models.TaskList, error) {
+	inRels, err := taskNode.Incoming("DEPENDS_ON")
 	if err != nil {
-		return nil, NotFound
+		return nil, err
 	}
+	nodeList := make(models.TaskList, 0)
+	for _, rel := range inRels {
+		node, err := rel.Start()
+		newNode := myNode{*node}
+		task, err := newNode.toModel()
+		if err != nil {
+			return nil, err
+		}
+		nodeList = append(nodeList, task)
+	}
+	return &nodeList, nil
+}
+
+func (taskNode *myNode) getOutDeps() (*models.TaskList, error) {
+	outRels, err := taskNode.Outgoing("DEPENDS_ON")
+	if err != nil {
+		return nil, err
+	}
+	nodeList := make(models.TaskList, 0)
+	for _, rel := range outRels {
+		node, err := rel.End()
+		newNode := myNode{*node}
+		task, err := newNode.toModel()
+		if err != nil {
+			return nil, err
+		}
+		nodeList = append(nodeList, task)
+	}
+	return &nodeList, nil
+}
+
+func (taskNode *myNode) toModel() (*models.Task, error) {
 	nodeType, err := taskNode.GetProperty("type")
 	if err != nil || nodeType != "task" {
 		return nil, NotFound
 	}
 	sum, err := taskNode.GetProperty("summary")
 	if err != nil {
-		return nil, errors.New(fmt.Sprintf("Could not get '%s' for id: %s (%s)", "summary", id, err))
+		return nil, errors.New(fmt.Sprintf("Could not get '%s' for id: %s (%s)", "summary", taskNode.Id(), err))
 	}
 	desc, err := taskNode.GetProperty("description")
 	if err != nil {
-		return nil, errors.New(fmt.Sprintf("Could not get '%s' for id: %s (%s)", "description", id, err))
+		return nil, errors.New(fmt.Sprintf("Could not get '%s' for id: %s (%s)", "description", taskNode.Id(), err))
 	}
 	task := models.Task{
 		Id:          taskNode.Id(),
@@ -80,6 +115,35 @@ func (db *DataBase) GetTask(id int) (*models.Task, error) {
 		Description: desc,
 	}
 	return &task, nil
+}
+
+func (db *DataBase) GetTask(id int, dependencies bool) (*models.Task, error) {
+	nodes := db.Connection.Nodes
+	taskNode, err := nodes.Get(id)
+	if err != nil {
+		return nil, NotFound
+	}
+	newTaskNode := myNode{*taskNode}
+
+	task, err := newTaskNode.toModel()
+	if err != nil {
+		return nil, err
+	}
+
+	if dependencies == true {
+		inDeps, err := newTaskNode.getInDeps()
+		if err != nil {
+			return nil, err
+		}
+		task.InDeps = inDeps
+		outDeps, err := newTaskNode.getOutDeps()
+		if err != nil {
+			return nil, err
+		}
+		task.OutDeps = outDeps
+	}
+
+	return task, nil
 }
 
 func (db *DataBase) GetTasksList() *models.TaskList {
@@ -120,11 +184,11 @@ func (db *DataBase) GetTasksList() *models.TaskList {
 			panic(err)
 		}
 
-		task, err := db.GetTask(id)
+		task, err := db.GetTask(id, false)
 		if err != nil {
 			panic(errors.New(fmt.Sprintf("Could not get task (id: %s) (%s)", id, err)))
 		}
-		tasks = append(tasks, *task)
+		tasks = append(tasks, task)
 	}
 
 	return &tasks

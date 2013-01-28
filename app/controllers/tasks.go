@@ -130,7 +130,7 @@ type errorJSON struct {
 
 func (c Tasks) GetTask(id int, dependencies bool) rev.Result {
 	neo := db.Connect("http://localhost:7474/db/data")
-	task, err := neo.GetTask(id)
+	task, err := neo.GetTask(id, dependencies)
 	if err != nil {
 		if err == db.NotFound {
 			c.Response.Status = http.StatusNotFound

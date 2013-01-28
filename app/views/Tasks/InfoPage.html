@@ -6,11 +6,15 @@
 <div>
   Задача зависит от:
   <ul>
-    <li ng-repeat="dep in out_deps"></li>
+    <li ng-repeat="dep in in_deps = task.in_dependencies">
+       <a class="btn btn-link" href="#/info/{[dep.id]}">{[dep.summary]}</a>
+    </li>
   </ul>
 
   От задачи зависят:
   <ul>
-    <li ng-repeat="dep in in_deps"></li>
+    <li ng-repeat="dep in out_deps = task.out_dependencies">
+      <a class="btn btn-link" href="#/info/{[dep.id]}">{[dep.summary]}</a>
+    </li>
   </ul>
 </div>
