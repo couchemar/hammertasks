@@ -16,7 +16,20 @@
     <div class="form-actions">
       <button type="submit" class="btn btn-primary">Сохранить</button>
       <a  href="#/" class="btn">Отмена</a>
-      <a ng-click="remove()" class="btn btn-danger" ng-show="task.id">Удалить</a>
+      <a ng-click="openModal()" class="btn btn-danger" ng-show="task.id">Удалить</a>
     </div>
   </fieldset>
 </form>
+
+<div class="modal fade" modal="showModal" close="closeModal()">
+  <div class="modal-header">
+    <h4>Удалить задачу?</h4>
+  </div>
+  <div class="modal-body">
+    Задача будет удалена безвозвратно.
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-danger" ng-click="remove()">Удалить</button>
+    <button class="btn cancel" ng-click="closeModal()">Отмена</button>
+  </div>
+</div>

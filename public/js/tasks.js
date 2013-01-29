@@ -1,4 +1,4 @@
-angular.module('tasks', ['resources.tasks', 'services.notifications'])
+angular.module('tasks', ['ui.bootstrap.modal', 'resources.tasks', 'services.notifications'])
     .config(function($routeProvider) {
         $routeProvider
             .when('/', {controller: ListCtrl,
@@ -59,12 +59,21 @@ function EditTaskCtrl($scope, $location, $routeParams,
         $scope.task.remove(
             function() {
                 notifications.sendSuccess('Successfully deleted');
+                $scope.closeModal();
                 $location.path('/');
             },
             function(err) {
                 notifications.sendError(!!err.data['message']?err.data['message']:'Could not delete');
+                $scope.closeModal();
             }
         );
+    };
+    $scope.openModal = function () {
+        $scope.showModal = true;
+    };
+
+    $scope.closeModal = function () {
+        $scope.showModal = false;
     };
 }
 
