@@ -1,4 +1,4 @@
-angular.module('tasks', ['ui.bootstrap.modal', 'resources.tasks', 'services.notifications'])
+angular.module('tasks', ['ui.bootstrap.dialog', 'resources.tasks', 'services.notifications'])
     .config(function($routeProvider) {
         $routeProvider
             .when('/', {controller: ListCtrl,
@@ -34,7 +34,7 @@ function CreateTaskCtrl($scope, $location, Task, notifications) {
 }
 
 function EditTaskCtrl($scope, $location, $routeParams,
-                      Task, notifications) {
+                      Task, notifications, $dialog) {
     Task.get(
         {id: $routeParams.taskId},
         function(task) {
@@ -59,21 +59,35 @@ function EditTaskCtrl($scope, $location, $routeParams,
         $scope.task.remove(
             function() {
                 notifications.sendSuccess('Successfully deleted');
-                $scope.closeModal();
                 $location.path('/');
             },
             function(err) {
                 notifications.sendError(!!err.data['message']?err.data['message']:'Could not delete');
-                $scope.closeModal();
             }
         );
     };
-    $scope.openModal = function () {
-        $scope.showModal = true;
+
+    $scope.opts = {
+        backdrop: true,
+        keyboard: true,
+        backdropClick: true,
+        templateUrl: 'public/templates/remove-task.tpl.html',
+        controller: 'DialogController'
     };
 
-    $scope.closeModal = function () {
-        $scope.showModal = false;
+    $scope.openModal = function () {
+        var d = $dialog.dialog($scope.opts);
+        d.open().then(function(result) {
+            if (result) {
+                $scope.remove();
+            }
+        });
+    };
+}
+
+function DialogController($scope, dialog) {
+    $scope.close = function(result) {
+        dialog.close(result);
     };
 }
 
