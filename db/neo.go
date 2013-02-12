@@ -97,15 +97,15 @@ func (taskNode *myNode) getOutDeps() (*models.TaskList, error) {
 }
 
 func (taskNode *myNode) toModel() (*models.Task, error) {
-	nodeType, err := taskNode.GetProperty("type")
+	nodeType, err := taskNode.Property("type")
 	if err != nil || nodeType != "task" {
 		return nil, NotFound
 	}
-	sum, err := taskNode.GetProperty("summary")
+	sum, err := taskNode.Property("summary")
 	if err != nil {
 		return nil, errors.New(fmt.Sprintf("Could not get '%s' for id: %s (%s)", "summary", taskNode.Id(), err))
 	}
-	desc, err := taskNode.GetProperty("description")
+	desc, err := taskNode.Property("description")
 	if err != nil {
 		return nil, errors.New(fmt.Sprintf("Could not get '%s' for id: %s (%s)", "description", taskNode.Id(), err))
 	}
